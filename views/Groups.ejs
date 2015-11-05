@@ -1,0 +1,265 @@
+<html>
+   <head>
+      <title>FaceBook</title>
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>   
+   </head>
+   <body> 
+<div ng-app="groupApp" ng-controller="groupController" style="background-color:#dfe3ee">
+<div style="background-color:#3b5998">
+	<h1 style="line-height: 2;"><center><font color="white">Facebook</font></center></h1>
+</div>
+<br><br>
+<div class="container">
+    <ul class="nav nav-pills nav-justified">
+    <li><a href="HomePage">Timeline</a></li>
+    <li><a href="Profiles">{{firstname}} <span>{{lastname}}</span></a></li>
+    <li><a href="About" >About</a></li>
+    <li><a href="Friends">Friends</a></li>
+    <li class="active"><a data-toggle="tab" href="#Groups">Groups</a></li>
+    <li><a href="logout">Log Out</a></li>
+  </ul>
+  
+   
+  <div class="tab-content">
+    <div id="Groups" class="tab-pane fade in active">
+   <br><br><br>
+   
+  	 <div class="col-sm-12" style="width:50%;">
+       <br><br><br>
+            <form class="afterSignIn">
+               <!-- This panel is for login -->
+               <div class="panel panel-primary">
+                  <!-- Default panel contents -->
+                  <div class="panel-heading">Create your Group</div>
+                  <div class="panel-body" style="background-color:#F5F5FF">
+		            <form class="form-horizontal" role="form">
+			            <div class="form-group  usernameDiv">
+				            <label class="inputUsername" class="col-sm-3 control-label pull-left" style="padding-top:8px;">Group Name</label>
+				            <div class="col-sm-9" style="float: right;">
+				            <input type="text" class="form-control " name="group.groupname" id="group.groupname" ng-model="group.groupname" placeholder="Enter the group name">
+				            </div>
+			            </div>
+			            <div class="form-group  usernameDiv">
+				            <label class="inputUsername" class="col-sm-3 control-label pull-left" style="padding-top:18px;">Group Description</label>
+				            <div class="col-sm-9" style="float: right;">
+				            <textarea class="form-control rows="3" " name="group.gdescription" id="group.gdescription" ng-model="group.gdescription" placeholder="Write about your group"></textarea>
+				            </div>
+			            </div>
+			            <br>
+			            <div class="form-group ">
+				            <div class="pull-left signIn">
+				            	<button type="reset" class="btn btn-primary">Reset</button>&nbsp;&nbsp;&nbsp;
+			            	</div>
+			            	<div class="pull-left signIn">
+				           		<button type="submit" class="btn btn-primary" ng-click = "createGroupClick()">Create Group</button>
+				        	</div>
+			            </div>
+		            </form>
+		          </div>
+		        </div>
+		     </form>
+           </div>
+	 
+	 <div class="col-sm-12">
+		<h4><u>All Groups</u></h4>
+			<div class="container" class="row" >
+				 <li class = "list-group-item" style="width: 20%; margin-top: 10px; height:52px; background-color:#F5F5FF" 
+				 ng-repeat ="x in allgroups"
+				 <span class="name"><b>{{x.groupname}}</b></span>
+				 </li>
+				 <br><br><br>
+			</div>
+			 
+		<h4><u>Other Groups</u></h4>
+			<div class="container" class="row" >
+				 <li class = "list-group-item" style="width: 50%; margin-top: 10px; height:52px; background-color:#F5F5FF" 
+				 ng-repeat ="x in othergroups"
+				 <span class="name"><b>{{x.groupname}}</b></span>
+				 <span><button style="float: right;" type="submit" class="btn btn-primary" ng-click="joinGroup(x.groupid)">Join Group</button>
+				 </li>
+				 <br><br><br>
+			</div>
+	</div>	     
+            
+   <div class="col-sm-12">
+	<div class="container">
+	  <!-- Modal -->
+	  <div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal" >&times;</button>
+	          <h4 class="modal-title">Group name : {{viewname[0].groupname}}</h4>
+	        </div>
+	        <div class="modal-body">
+	          <h4>Group Description : {{viewname[0].groupdescription}}</h4><br>
+	          <h4>Group Owner : {{viewname[0].creater}}</h4><br>
+	          <div class="container" class="row" >
+		          <h4>Group Members :</h4>
+			      <li class = "list-group-item" style="margin-top: 10px; width:35%;"
+			      ng-repeat ="x in viewname"
+			      <span class="name">{{x.member}}</span>
+			      </li>
+	     	 </div>
+       	 </div>
+         <div class="modal-footer">
+        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+			<h4><u>My Groups</u></h4>
+			<div class="container" class="row" >
+				     
+			    <li class = "list-group-item" style="width: 50%; margin-top: 10px; height:52px; background-color:#F5F5FF" 
+			      ng-repeat ="x in mygroups"
+			      <span class="name"><b>{{x.groupname}}</b></span>	
+			      <button style="float: right;" type="submit" class="btn btn-primary" ng-click="deleteGroup(x.groupid)">Delete Group</button>
+			      <button style="float: right;" type="submit" class="btn btn-primary" ng-click="exitGroupClick(x.groupid)">Exit Group</button>
+			      <button style="float: right;" type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="viewGroup(x.groupid)" >View Group</button>	      
+				</li>
+			    <br><br><br>
+		     </div>
+      	  </div>
+        </div>
+      </div>
+    </div>
+      <script>
+         var groupapp = angular.module('groupApp', []);
+         groupapp.controller('groupController', function($scope,$http) {
+                  
+	        	getMe();         	
+	         	function getMe(){
+	         		$http.post('/afterGetMe').
+	         			then(function(response) {
+	         	             $scope.me = response.data;
+	         	             $scope.firstname = $scope.me.firstname;
+	         	             $scope.lastname = $scope.me.lastname;
+	         	          },function(response){
+	         	          
+	         	    	  });
+	         	};
+	        	        
+		        $scope.checkIfSelected= function(selectedGroup){
+						x.isSelected = true;
+				};
+				
+				$scope.joinGroup= function(groupid){
+						var request = $http({
+							method:"post",
+							data:{
+								groupid: groupid
+							},
+							url:'/afterJoinGroup'
+						});
+						request.success(
+							function(response){
+								  $scope.joinname = response.data;
+							});
+					};				
+			         
+				 $scope.exitGroupClick= function(groupid){
+						var request = $http({
+							method:"post",
+							data:{
+								groupid: groupid
+							},
+							url:'/afterExitGroupClick'
+						});
+						request.success(
+							function(response){
+								  $scope.exitname = response.data;
+							});
+					};	
+				
+					 $scope.deleteGroup= function(groupid){
+						var request = $http({
+							method:"post",
+							data:{
+								groupid: groupid
+							},
+							url:'/afterDeleteGroup'
+						});
+						request.success(
+							function(response){
+								  $scope.deletename = response.data;
+							});
+					};
+				
+					$scope.viewGroup= function(groupid){
+						var request = $http({
+							method:"post",
+							data:{
+								groupid: groupid
+							},
+							url:'/afterViewGroup'
+						});
+						request.success(
+							function(response){
+								  $scope.viewname = response;
+							});
+					};
+							
+								
+		         	$scope.createGroupClick= function(){
+		         	alert("Sucessfully Created Group!!");
+		         		$http.post('/afterCreateGroupClick',$scope.group).
+		         			then(function(response) {
+		         	         
+		         	             $scope.groups = response.data;
+							     console.log("displaying scope.groups");
+							     console.log($scope.groups);
+		         	          },function(response){
+		         	        
+		         	    	  });
+		         	};
+			
+					getMyGroups();
+					function getMyGroups(){
+						$http.post('/afterGetGroups',$scope.mygroup).
+							then(function(response) {
+					                 $scope.mygroups = response.data;			             
+					          },function(response){
+					          
+					    	  });
+					};
+			
+					getAllGroups();
+					function getAllGroups(){
+						$http.post('/afterGetAllGroups',$scope.allgroup).
+							then(function(response) {		             
+					                 $scope.allgroups = response.data;
+					          },function(response){
+					          
+					    	  });
+					};
+			
+					$scope.getAllGroups= function(){
+						$http.post('/afterGetAllGroups',$scope.allgroup).
+							then(function(response) {		             
+					                 $scope.allgroups = response.data;
+					          },function(response){
+					          
+					    	  });
+					};
+			
+					getOtherGroups();
+					function getOtherGroups(){
+						$http.post('/afterGetOtherGroups',$scope.mygroup).
+							then(function(response) {
+					                 $scope.othergroups = response.data;			             
+					          },function(response){
+					          
+					    	  });
+					};			
+      });
+      </script>
+   </body>
+</html>

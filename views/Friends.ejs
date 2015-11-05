@@ -1,0 +1,256 @@
+<html>
+   <head>
+      <title>FaceBook</title>
+      <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+      
+      <link rel='stylesheet' href='/stylesheets/homeStyle.css' />
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>     
+	  <script type="text/javascript" src="http://tympanus.net/jPaginate/jquery.paginate.js"></script>
+   </head>
+   <body> 
+<div ng-app="friendApp" ng-controller="friendController" style="background-color:#dfe3ee">
+<div style="background-color:#3b5998">
+	<h1 style="line-height: 2;"><center><font color="white">Facebook</font></center></h1>
+</div>
+<br><br>
+<div class="container">
+    <ul class="nav nav-pills nav-justified">
+    <li><a href="HomePage">Timeline</a></li>
+    <li><a href="Profiles">{{firstname}} <span>{{lastname}}</span></a></li>
+    <li><a href="About" >About</a></li>
+    <li class="active"><a data-toggle="tab" href="#friends">Friends</a></li>
+    <li><a href="Groups">Groups</a></li>
+    <li><a href="logout">Log Out</a></li>
+  </ul>
+  
+  <div class="tab-content">
+    <div id="friends" class="tab-pane fade in active">
+  <br><br><br>
+  <div col-lg-08>
+    	  <div class="input-group">
+             <input class="form-control" style="width: 80%;" type="text" id="user" placeholder="Search Facebook Users" ng-model="user" ng-keyup = "searchUsers(user)" required></input>
+             <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal" ng-click="getUserProfile(id)"><span class="glyphicon glyphicon-search"></span></button>
+          </div>   
+	</div>	
+	 <br><br>
+	 
+	 <div class="col-sm-12">
+	 <br><br><br>
+      <h4><u>Users On Facebook who are not your friends</u></h4>
+		 <li class = "list-group-item" style="width: 40%; margin-top: 10px; height:52px; background-color:#F5F5FF" 
+		  ng-repeat ="x in allfriends"
+		   <span class="name"><b>{{x.firstname}}</b></span>
+		   <span class="name"><b>{{x.lastname}}</b></span>
+		   <span><button style="float: right;" type="submit" class="btn btn-primary" ng-click="friendRequest(x.userid)">Friend Request</button>
+		 </li>
+	  <br><br><br><br><br><br>
+	</div>	 
+	 	 
+	<div class="col-sm-12">
+		<h4><u>Friends</u></h4>
+		 <li class = "list-group-item" style="width: 40%; margin-top: 10px; height:52px; background-color:#F5F5FF" 
+		  ng-repeat ="x in myfriends"
+		  <span class="name"><b>{{x.firstname}}</b></span>
+		  <span class="name"><b>{{x.lastname}}</b></span>
+		  <span><button style="float: right;" type="submit" class="btn btn-primary" ng-click="unfriend(x.userid)">UnFriend</button>
+		 </li>
+		<br><br><br><br><br><br>
+	</div>	 
+	
+	<div class="col-sm-12">
+		<h4><u>Friend Requests</u></h4>		    
+		 <li class = "list-group-item" style="width: 40%; margin-top: 10px; height:52px; background-color:#F5F5FF" 
+		   ng-repeat ="x in friendrequests"
+		   <span class="name"><b>{{x.firstname}}</b></span>
+		   <span class="name"><b>{{x.lastname}}</b></span>
+		   <span><button style="float: right;" type="submit" class="btn btn-primary" ng-click="acceptFriendRequest(x.userid)">Accept Friend Request</button>
+		 </li>		     
+	    <br><br><br><br><br><br>
+	</div>	
+	
+	<div class="container">
+	  <!-- Trigger the modal with a button -->
+	 
+	  <!-- Modal -->
+	  <div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal" >&times;</button>
+	          <h4 class="modal-title"><b><center>{{userprofile[0].firstname}}{{ userprofile[0].lastname}}</center></b></h4>
+	        </div>
+	        <div class="modal-body">	        
+	          <h4 class="modal-title"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><b> Email : </b>{{userprofile[0].email}}</h4>
+	          <div class="container" class="row" >
+		          <br>
+		          <h4><u>About</u></h4>
+			    	<h5><span class="glyphicon glyphicon-user" aria-hidden="true"></span><b> Description : </b>{{userprofile[0].description}}</h5>
+			    	<h5><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span><b> Work Experience : </b>{{userprofile[0].workexperience}}</h5>
+			    	<h5><span class="glyphicon glyphicon-education" aria-hidden="true"></span><b> Education : </b>{{userprofile[0].education}}</h5>
+			    	<h5><span class="glyphicon glyphicon-phone" aria-hidden="true"></span><b> Contact : </b>{{userprofile[0].contactinfo}}</h5>
+					<h5><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><b> Life Events : </b>{{userprofile[0].lifeevents}}</h5>
+					<br><br>
+				  <h4><u>Interests</u></h4>
+			    	<h5><span class="glyphicon glyphicon-music" aria-hidden="true"></span><b> Music : </b>{{userprofile[0].music}}</h5>
+			    	<h5><span class="glyphicon glyphicon-film" aria-hidden="true"></span><b> Movies : </b>{{userprofile[0].movies}}</h5>
+			    	<h5><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span><b> TV Shows : </b>{{userprofile[0].tvshows}}</h5>
+			    	<h5><span class="glyphicon glyphicon-book" aria-hidden="true"></span><b> Books : </b>{{userprofile[0].books}}</h5>
+					<h5><span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span><b> Sports : </b>{{userprofile[0].sports}}</h5>
+				  <br><br>
+			  </div>
+          </div>
+        <div class="modal-footer">
+       	 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+     <script>
+         var friendapp = angular.module('friendApp', []);
+         friendapp.controller('friendController', function($scope,$http) {
+         
+         			getMe();         	
+		         	function getMe(){
+		         		$http.post('/afterGetMe').
+		         			then(function(response) {
+		         	             $scope.me = response.data;
+		         	             $scope.firstname = $scope.me.firstname;
+		         	             $scope.lastname = $scope.me.lastname;
+		         	          },function(response){
+		         	          
+		         	    	  });
+		         	};
+                 
+	        		$scope.checkIfSelected= function(selectedFriend){
+						x.isSelected = true;
+					};
+				
+					getMyFriends()
+					function getMyFriends(){
+					$http.post('/afterGetMyFriends',$scope.myfriend).
+						then(function(response) {
+				                 $scope.myfriends = response.data;			             
+				          },function(response){
+				    	  });
+					};
+								
+					$scope.unfriend= function(userid){
+						var request = $http({
+							method:"post",
+							data:{
+								userid: userid
+							},
+							url:'/afterUnfriend'
+						});
+						request.success(
+							function(response){
+								  $scope.unfriend = response.data;
+							});
+					};
+				
+					$scope.acceptFriendRequest= function(userid){
+						var request = $http({
+							method:"post",
+							data:{
+								userid: userid
+							},
+							url:'/afterAcceptFriendRequest'
+						});
+						request.success(
+							function(response){
+								  $scope.acceptfriend = response.data;
+							});
+					};
+				
+					$scope.friendRequest= function(userid){
+						var request = $http({
+							method:"post",
+							data:{
+								userid: userid
+							},
+							url:'/afterAddFriendClick'
+						});
+						request.success(
+							function(response){
+								  $scope.requestfriend = response.data;
+							});
+					};
+				
+					getAllFriends();
+					function getAllFriends(){
+					console.log($scope.group);
+					$http.post('/afterGetAllFriends',$scope.allfriend).
+						then(function(response) {
+				             $scope.allfriends = response.data;
+				          },function(response){
+				          
+				    	  });
+					};									
+					
+					getFriendRequests();
+					function getFriendRequests(){
+					console.log($scope.friend);
+					$http.post('/getFriendRequests').
+						then(function(response) {
+				             $scope.friendrequests = response.data;
+				          },function(response){
+				    	  });
+					};				
+														
+					$scope.getUserProfile= function(id){
+						var request = $http({
+							method:"post",
+							data:{
+								id: id
+							},
+							url:'/afterGetUserProfile'
+						});
+						request.success(
+							function(response){
+								  $scope.userprofile = response;
+								  console.log("userprofile is :"+$scope.userprofile);
+							});
+					};		
+							
+		      		$scope.searchUsers= function(){
+						var request = $http({
+							method:"post",
+							data:{
+								user: $scope.user
+							},
+							url:'/afterSearchUsers'
+						});
+						request.success(
+							function(response){
+							var test = response.map(function(user){
+								return {
+		                            label: user.firstname + "  " + user.lastname,
+		                            value: user.userid
+		                        };
+							});
+							$('#user').autocomplete({
+							source:test,
+							select: function (event, ui) {
+								event.preventDefault();
+								$('#user').val(ui.item.label);
+								$scope.id = ui.item.value;
+								console.log("scope.id is : "+$scope.id);
+							}
+							})
+							});
+					};	
+		});    
+      </script>
+   </body>
+</html>

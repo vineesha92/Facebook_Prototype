@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>FaceBook</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+</head>
+<body>
+<div ng-app="myApp" ng-controller="myCntrl" style="background-color:#dfe3ee">
+<div style="background-color:#3b5998">
+	<h1 style="line-height: 2;"><center><font color="white">Facebook</font></center></h1>
+</div>
+<br><br>
+<div class="container">
+    <ul class="nav nav-pills nav-justified">
+    <li class="active"><a data-toggle="tab" href="#home">Timeline</a></li>
+    <li><a href="Profiles">{{firstname}} <span>{{lastname}}</span></a></li>
+    <li><a href="About" >About</a></li>
+    <li><a href="Friends">Friends</a></li>
+    <li><a href="Groups">Groups</a></li>
+    <li><a href="logout">Log Out</a></li>
+  </ul>
+  
+ 
+  <div class="tab-content">
+    <div  id="home" class="tab-pane fade in active">
+     <br>
+     <div class="col-sm-4">
+    <div class = "col-sm-12">
+    <div class="container" class="row" >
+    	
+    		<h4><u>Friends</u></h4>
+			      <li class = "list-group-item" style="width: 15%; margin-top: 10px; background-color:#F5F5FF" 
+			      ng-repeat ="x in myfriends"
+			      <span class="name"><b>{{x.firstname}}</b></span>
+			      <span class="name"><b>{{x.lastname}}</b></span>
+			      </li>
+		 <br><br>
+		<h4><u>Interests</u></h4>
+    	<h5><span class="glyphicon glyphicon-music" aria-hidden="true"></span><b> Music : </b>{{music}}</h5>
+    	<h5><span class="glyphicon glyphicon-film" aria-hidden="true"></span><b> Movies : </b>{{movies}}</h5>
+    	<h5><span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span><b> TV Shows : </b>{{tvshows}}</h5>
+    	<h5><span class="glyphicon glyphicon-book" aria-hidden="true"></span><b> Books : </b>{{books}}</h5>
+		<h5><span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span><b> Sports : </b>{{sports}}</h5>
+		<br><br>
+	</div>
+    </div>
+    </div>
+      <div class="col-sm-7">
+		     <div class="col-sm-12">
+		     <br><br>
+		     <form class="form-horizontal" role="form">
+		      <div class="form-group" usernameDiv>
+		       <label class="status" class="col-sm-2 control-label pull-left" style="padding-top:40px;">Status</label>
+		          <div class="col-sm-10" style="float: right;width:90%;">
+		            <textarea class="form-control" rows="4" cols="55" name="post.status" ng-model= "post.status" placeholder = "What's on your mind ?"></textarea><br><br>
+		           <div class="form-group ">
+		            <div class="pull-right signIn">
+		    		  <button type="submit" class="btn btn-primary" value="Post" ng-click="postClick()">Post</input>
+		    		</div>
+		      	   </div>
+		         </div>
+		     </div>
+		    </form>
+		    </div>
+		    <div class="col-sm-12">
+		      <div class="container" class="row" >
+			      <li class = "list-group-item" style="width: 53%; margin-top: 10px;" 
+			      ng-repeat ="x in status"
+			      <span class="name"><b>{{x.firstname}}</b></span>
+			      <br><br>
+			      <span class="name">{{x.status}}</span>
+			      </li>
+		      </div>   <br><br><br><br><br><br>
+		    </div>
+    </div>
+    <div class="col-sm-1">
+    </div> 
+    </div>        
+   </div>
+  </div>
+</div>
+
+	<script>
+
+			var app2 = angular.module('myApp', []);
+  	        app2.controller('myCntrl', function($scope,$http, $interval) {
+         
+		         		getMe();         	
+			         	function getMe(){
+			         		$http.post('/afterGetMe').
+			         			then(function(response) {
+			         	             $scope.me = response.data;
+			         	             
+			         	             $scope.firstname = $scope.me.firstname;
+			         	             $scope.lastname = $scope.me.lastname;
+			         	             
+			         	          },function(response){
+			         	          
+			         	    	  });
+			         	};
+         
+		       	  	$interval(getPosts,10*1000);
+		         
+		         	$scope.postClick= function(){	
+		         		$http.post('/afterPostClick',$scope.post).
+		         			then(function(response) {
+		         	             $scope.posts = response.data;
+		         	             window.location.href='/HomePage';
+		         	          },function(response){
+		         	          
+		         	    	  });
+		         	};  
+         	
+		         	getPosts();
+		         	function getPosts(){
+		         		$http.post('/afterGetPosts',$scope.getpost).
+		         			then(function(response) {
+		         	             $scope.status = response.data;
+		         	          },function(response){
+		         	          
+		         	    	  });
+		         	}; 	
+         	
+		         	getAboutMe();
+					function getAboutMe (){
+						 $http.post('/afterGetAboutMe').
+							then(function(response) {
+					                 $scope.getabout = response.data;
+					                
+					                 $scope.desc = $scope.getabout.description;
+					                 $scope.edu = $scope.getabout.education;
+					                 $scope.workex = $scope.getabout.workexperience;
+					                 $scope.contact = $scope.getabout.contact;
+					                 $scope.lifeevents = $scope.getabout.lifeevents;
+					                 $scope.movies = $scope.getabout.movies;
+					                 $scope.music = $scope.getabout.music;
+					                 $scope.tvshows = $scope.getabout.tvshows;
+					                 $scope.sports = $scope.getabout.sports;
+					                 $scope.books = $scope.getabout.books;
+					                 	             
+					          },function(response){
+					    	  });
+						};
+				
+						getMyFriends();
+						function getMyFriends(){
+						$http.post('/afterGetMyFriends').
+							then(function(response) {
+					                 $scope.myfriends = response.data;			             
+					          },function(response){
+					    	  });
+						};
+								         	
+	});
+</script>
+</body>
+</html>
